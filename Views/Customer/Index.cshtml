@@ -1,0 +1,62 @@
+﻿@model IEnumerable<ABC_Retailers.Models.Customer>
+
+@{
+    ViewData["Title"] = "Customer List";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Customer List</h2>
+    <a class="btn btn-primary" asp-action="Create">
+        <i class="bi bi-person-plus"></i> Add New Customer
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> No customers found.
+    </div>
+}
+else
+{
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Customer ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Shipping Address</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var customer in Model)
+                    {
+                        <tr>
+                            <td>@customer.RowKey</td>
+                            <td>@($"{customer.FirstName} {customer.LastName}")</td>
+                            <td>@customer.Email</td>
+                            <td>@customer.UserName</td>
+                            <td>@customer.ShippingAddress</td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Edit" asp-route-id="@customer.RowKey"
+                                       class="btn btn-sm btn-outline-warning">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@customer.RowKey"
+                                       class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

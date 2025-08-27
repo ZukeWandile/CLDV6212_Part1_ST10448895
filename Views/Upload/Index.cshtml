@@ -1,0 +1,60 @@
+﻿@model ABC_Retailers.Models.FileUploadModel
+
+@{
+    ViewData["Title"] = "Upload Payment Proof";
+    var pendingOrders = ViewData["PendingOrders"] as List<SelectListItem>;
+}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h2 class="card-title mb-4">Upload Payment Proof</h2>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                <i class="bi bi-check-circle"></i> @TempData["SuccessMessage"]
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle"></i> @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <form asp-action="Index" asp-controller="Upload" method="post" enctype="multipart/form-data">
+            <div class="form-group mb-3">
+                <label asp-for="ProofOfPayment" class="form-label">Upload File</label>
+                <input asp-for="ProofOfPayment" type="file" class="form-control" />
+                <small class="form-text text-muted">Accepted formats: PDF, JPG, PNG (Max size ~5MB)</small>
+                <span asp-validation-for="ProofOfPayment" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="OrderId" class="form-label">Select Pending Order</label>
+                <select asp-for="OrderId" class="form-select" asp-items="pendingOrders">
+                    <option value="">-- Select Order --</option>
+                </select>
+                <span asp-validation-for="OrderId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CustomerName" class="form-label">Customer Name (optional)</label>
+                <input asp-for="CustomerName" class="form-control" placeholder="Optional reference" />
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" asp-controller="Order" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Orders
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-upload"></i> Upload Proof
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

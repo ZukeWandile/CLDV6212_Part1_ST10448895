@@ -1,0 +1,183 @@
+﻿@model ABC_Retailers.Models.ViewModel.HomeViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #0f172a, #1e3a8a);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #f8f9fa;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 3rem auto;
+        padding: 1rem;
+    }
+
+    .hero {
+        text-align: center;
+        padding: 3rem 0;
+    }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: #38bdf8;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #e5e7eb;
+            margin-bottom: 2rem;
+        }
+
+    .btn-primary {
+        background-color: #2563eb;
+        color: #fff;
+        padding: 0.8rem 1.6rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #1e40af;
+        }
+
+    /* Dashboard stats */
+    .stats {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        margin-top: 3rem;
+        flex-wrap: wrap;
+    }
+
+    .stat-card {
+        flex: 1 1 30%;
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        transition: transform 0.3s ease;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .stat-card h2 {
+            font-size: 2rem;
+            color: #38bdf8;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 1.1rem;
+            color: #f1f5f9;
+        }
+
+    /* Featured products */
+    .products {
+        margin-top: 4rem;
+    }
+
+        .products h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #38bdf8;
+        }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 2rem;
+    }
+
+    .product-card {
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        transition: transform 0.3s ease;
+    }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .product-card h3 {
+            color: #f8fafc;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-card p {
+            color: #cbd5e1;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-card span {
+            font-weight: bold;
+            color: #38bdf8;
+        }
+</style>
+
+<div class="container">
+    <!-- Hero -->
+    <div class="hero">
+        <h1>Welcome to ABC Retailers</h1>
+       
+        <a href="@Url.Action("Index", "Product")" class="btn-primary">Browse Products</a>
+    </div>
+
+    <!-- Dashboard stats -->
+    <div class="stats">
+        <div class="stat-card">
+            <h2>@Model.CustomerCount</h2>
+            <p>Customers</p>
+        </div>
+        <div class="stat-card">
+            <h2>@Model.ProductCount</h2>
+            <p>Products</p>
+        </div>
+        <div class="stat-card">
+            <h2>@Model.OrderCount</h2>
+            <p>Orders</p>
+        </div>
+    </div>
+
+    <!-- Featured products -->
+    <div class="products">
+        <h2>Featured Products</h2>
+        <div class="product-grid">
+            @foreach (var product in Model.FeaturedProducts)
+            {
+                <div class="product-card">
+                    <img src="@product.ImageUrl" alt="@product.ProductName" />
+                    <h3>@product.ProductName</h3>
+                    <p>@product.Description</p>
+                    <span>$@product.Price</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>

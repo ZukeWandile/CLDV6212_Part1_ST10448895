@@ -1,0 +1,63 @@
+﻿@model ABC_Retailers.Models.Order
+
+@{
+    ViewData["Title"] = "Edit Order";
+}
+
+<h2>Edit Order</h2>
+
+<div class="card p-4 shadow rounded">
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="RowKey" />
+        <input type="hidden" asp-for="PartitionKey" />
+        <input type="hidden" asp-for="ETag" />   <!-- NEW: Persist concurrency token -->
+        <input type="hidden" asp-for="ProductID" />
+
+        <div class="mb-3">
+            <label class="form-label">Customer</label>
+            <input type="text" class="form-control" value="@Model.CustomerName" readonly />
+            <input type="hidden" asp-for="UserName" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Product</label>
+            <input type="text" class="form-control" value="@Model.ProductName" readonly />
+            <input type="hidden" asp-for="ProductName" />
+        </div>
+
+
+        <div class="mb-3">
+            <label asp-for="Quantity" class="form-label"></label>
+            <input asp-for="Quantity" class="form-control" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="TotalPrice" class="form-label"></label>
+            <input asp-for="TotalPrice" class="form-control" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="OrderDate" class="form-label"></label>
+            <input asp-for="OrderDate" class="form-control" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Status" class="form-label">Order Status</label>
+            <select asp-for="Status" asp-items="ViewBag.Statuses" class="form-select"></select>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.ProofOfPaymentUrl))
+        {
+            <div class="mb-3">
+                <label class="form-label">Proof of Payment</label>
+                <p>
+                    <a href="@Model.ProofOfPaymentUrl" target="_blank">View Proof of Payment</a>
+                </p>
+            </div>
+        }
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>

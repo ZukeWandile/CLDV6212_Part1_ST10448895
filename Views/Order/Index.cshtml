@@ -1,0 +1,97 @@
+﻿@model IEnumerable<ABC_Retailers.Models.Order>
+
+@{
+    ViewData["Title"] = "Order List";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Order List</h2>
+    <a class="btn btn-primary" asp-action="Create">
+        <i class="bi bi-cart-plus"></i> Add New Order
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> No orders found.
+    </div>
+}
+else
+{
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Product</th>
+                        <th>Customer</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                        <th>Order Date</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>@order.RowKey</td>
+                            <td>@order.ProductName</td>
+                            <td>@order.CustomerName</td>
+                            <td>@order.Quantity</td>
+                            <td>@order.TotalPrice.ToString("C")</td>
+                            <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                <span class="badge bg-@GetStatusClass(order.Status)">
+                                    @(!string.IsNullOrEmpty(order.Status) ? order.Status : "Pending")
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Details"
+                                       asp-route-partitionKey="@order.PartitionKey"
+                                       asp-route-rowKey="@order.RowKey"
+                                       class="btn btn-sm btn-outline-info">
+                                        <i class="bi bi-eye"></i> Details
+                                    </a>
+                                    <a asp-action="Edit"
+                                       asp-route-partitionKey="@order.PartitionKey"
+                                       asp-route-rowKey="@order.RowKey"
+                                       class="btn btn-sm btn-outline-warning">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </a>
+                                    <form asp-action="DeleteConfirmed" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="partitionKey" value="@order.PartitionKey" />
+                                        <input type="hidden" name="rowKey" value="@order.RowKey" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                onclick="return confirm('Are you sure you want to delete this order?');">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@functions {
+    private string GetStatusClass(string status)
+    {
+        return status switch
+        {
+            "Pending" => "secondary",
+            "Processing" => "warning",
+            "Completed" => "success",
+            "Cancelled" => "danger",
+            _ => "light"
+        };
+    }
+}

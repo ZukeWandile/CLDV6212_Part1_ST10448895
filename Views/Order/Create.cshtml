@@ -1,0 +1,71 @@
+﻿@model ABC_Retailers.Models.ViewModel.OrderCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Order";
+    var productPricesJson = ViewData["ProductPricesJson"] as string ?? "{}";
+}
+
+<h2>Create Order</h2>
+
+<form asp-action="Create" method="post" id="orderForm">
+    <div class="form-group mb-3">
+        <label asp-for="CustomerId"></label>
+        <select asp-for="CustomerId" asp-items="Model.Customers" class="form-select">
+            <option value="">-- Select Customer --</option>
+        </select>
+        <span asp-validation-for="CustomerId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="ProductId"></label>
+        <select asp-for="ProductId" asp-items="Model.Products" class="form-select">
+            <option value="">-- Select Product --</option>
+        </select>
+        <span asp-validation-for="ProductId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Quantity"></label>
+        <input asp-for="Quantity" class="form-control" min="1" />
+        <span asp-validation-for="Quantity" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Total Price</label>
+        <input id="TotalPrice" name="TotalPrice" class="form-control" readonly value="0.00" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Place Order</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Parse product prices JSON sent from server
+        const productPrices = @Html.Raw(productPricesJson);
+
+        const productSelect = document.getElementById("ProductId");
+        const quantityInput = document.getElementById("Quantity");
+        const totalPriceInput = document.getElementById("TotalPrice");
+
+        function calculateTotal() {
+            const productId = productSelect.value;
+            const quantity = parseInt(quantityInput.value) || 0;
+
+            if (productId && quantity > 0 && productPrices[productId] !== undefined) {
+                const price = productPrices[productId];
+                const total = price * quantity;
+                totalPriceInput.value = total.toFixed(2);
+            } else {
+                totalPriceInput.value = "0.00";
+            }
+        }
+
+        productSelect.addEventListener("change", calculateTotal);
+        quantityInput.addEventListener("input", calculateTotal);
+
+        // Calculate total on page load
+        calculateTotal();
+    </script>
+}

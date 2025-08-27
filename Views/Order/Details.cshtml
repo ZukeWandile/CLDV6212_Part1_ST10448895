@@ -1,0 +1,70 @@
+﻿@model ABC_Retailers.Models.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h2 class="card-title mb-4">
+            <i class="bi bi-receipt-cutoff"></i> Order Details
+        </h2>
+
+        <dl class="row">
+            <dt class="col-sm-3 fw-bold">Order ID</dt>
+            <dd class="col-sm-9">@Model.RowKey</dd>
+
+            <dt class="col-sm-3 fw-bold">Customer</dt>
+            <dd class="col-sm-9">@Model.CustomerName</dd>
+
+            <dt class="col-sm-3 fw-bold">Product</dt>
+            <dd class="col-sm-9">@Model.ProductName</dd>
+
+            <dt class="col-sm-3 fw-bold">Quantity</dt>
+            <dd class="col-sm-9">@Model.Quantity</dd>
+
+            <dt class="col-sm-3 fw-bold">Total Price</dt>
+            <dd class="col-sm-9 text-success fw-bold">@Model.TotalPrice.ToString("C")</dd>
+
+            <dt class="col-sm-3 fw-bold">Order Date</dt>
+            <dd class="col-sm-9">@Model.OrderDate.ToString("yyyy-MM-dd HH:mm")</dd>
+
+            <dt class="col-sm-3 fw-bold">Status</dt>
+            <dd class="col-sm-9">
+                <span class="badge bg-@GetStatusClass(Model.Status) px-3 py-2">
+                    @(!string.IsNullOrEmpty(Model.Status) ? Model.Status : "Pending")
+                </span>
+            </dd>
+
+            <dt class="col-sm-3 fw-bold">Timestamp</dt>
+            <dd class="col-sm-9">@Model.Timestamp</dd>
+        </dl>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+            <a asp-action="Edit"
+               asp-route-partitionKey="@Model.PartitionKey"
+               asp-route-rowKey="@Model.RowKey"
+               class="btn btn-warning">
+                <i class="bi bi-pencil-square"></i> Edit Order
+            </a>
+
+        </div>
+    </div>
+</div>
+
+@functions {
+    private string GetStatusClass(string status)
+    {
+        return status switch
+        {
+            "Pending" => "secondary",
+            "Processing" => "warning",
+            "Completed" => "success",
+            "Cancelled" => "danger",
+            _ => "light"
+        };
+    }
+}
